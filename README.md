@@ -5,9 +5,14 @@ GSOC Modern Multivariate Analysis
 
 **This application is in progress and is not yet complete**
 
-So far I have: - Implemented L1 penalized rank 1 SFPCA algorithm in R - Implemented L1 penalized rank 1 SFPCA algorithm in C++ using Armadillo
+So far I have:
 
-Next steps: - Legitimate tests based on the provided MATLAB code - Make sure to pass R CMD check - Some general code cleanup
+-   Implemented the L1 penalized rank 1 SFPCA algorithm in R
+-   Implemented the L1 penalized rank 1 SFPCA algorithm in C++ using Armadillo
+
+Next steps:
+
+-   Legitimate tests based on the provided MATLAB code
 
 At this point both the R and C++ code runs and I get the same values when on the `iris` dataset:
 
