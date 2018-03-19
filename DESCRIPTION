@@ -1,0 +1,22 @@
+Package: moma
+Title: Application for GSOC MoMA Project
+Version: 0.0.0.9000
+Authors@R: person("Alex", "Hayes", email = "alexpghayes@gmail.com", role = c("aut", "cre"))
+Description: Computes the L1-penalized rank 1 sparse and functional matrix
+    factorization described in Sparse and Functional Principal Components
+    Analysis (Allen, 2013). Package is Alex's Hayes application to the
+    Google Summer of Code program.
+Depends: R (>= 3.4.1)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    testthat
+RoxygenNote: 6.0.1
+Imports: 
+    irlba,
+    Rcpp,
+    RcppArmadillo
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
