@@ -12,34 +12,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-# GSOC Modern Multivariate Analysis
-
-**This application is in progress and is not yet complete**
+## GSOC Modern Multivariate Analysis 
 
 So far I have:
 
   - Implemented the L1 penalized rank 1 SFPCA algorithm in R
   - Implemented the L1 penalized rank 1 SFPCA algorithm in C++ using Armadillo
-  
-Next steps:
+  - Wrapped the C++ with `Rcpp`
+  - Created tests for the implementation with `testthat`
+  - Passed `R CMD check` with no warnings or errors
 
-  - Legitimate tests based on the provided MATLAB code
+Unfortunately my results don't match up with Dr. Allen's MATLAB at the moment, so there's still some debugging to do.
 
-At this point both the R and C++ code runs and I get the same values when on the `iris` dataset:
-
-```{r}
-library(moma)
-
-X <- as.matrix(iris[, 1:4])
-sfpca(X, 10, 4)  
-sfpca_r(X, 10, 4)
-```
-
-The results match up with a standard rank 1 SVD when no penalties are included.
-
-```{r}
-irlba::irlba(X, 1, 1)
-sfpca(X)
-```
-
-
+**This application is in progress and is not yet complete**

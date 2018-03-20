@@ -16,7 +16,8 @@ RoxygenNote: 6.0.1
 Imports: 
     irlba,
     Rcpp,
-    RcppArmadillo
+    RcppArmadillo,
+    R.matlab
 LinkingTo: 
     Rcpp,
     RcppArmadillo

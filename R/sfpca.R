@@ -2,15 +2,9 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-zeros_like <- function(x) rep(0, length(x))  # vectors only
 op_norm <- function(x, A) sqrt(t(x) %*% A %*% x)  # operator norm
-l2_norm <- function(x) sqrt(sum(x^2))
+norm <- function(x) sqrt(sum(x^2))
 prox_l1 <- function(y, lambda) sign(y) * pmax(abs(y) - lambda, 0)
-
-max_eigenval <- function(X) {
-  # add 0.01 to agree with MATLAB implementation
-  max(eigen(X, symmetric = FALSE, only.values = TRUE)$values) + 0.01
-}
 
 #' Compute rank 1 sparse and functional principal components
 #'
@@ -33,12 +27,17 @@ sfpca <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
   # R wrapper around C++ implementation for lazily argument evaluation and
   # convenient argument checking
 
+  n <- nrow(X)
+  p <- ncol(X)
+
   stopifnot(lambda_u >= 0)
   stopifnot(lambda_v >= 0)
   stopifnot(alpha_u >= 0)
   stopifnot(alpha_v >= 0)
-  stopifnot(all(svd(Omega_u)$d >= 0))  # check if positive semi-definite
-  stopifnot(all(svd(Omega_v)$d >= 0))
+  stopifnot(all(eigen(Omega_u)$values >= 0))  # check if positive semi-definite
+  stopifnot(all(eigen(Omega_v)$values >= 0))
+  stopifnot(dim(Omega_u) == c(n, n))   # check correct dimensions
+  stopifnot(dim(Omega_v) == c(p, p))
 
   sfpca_arma(X, lambda_u, lambda_v, alpha_u, alpha_v, Omega_u, Omega_v)
 }
@@ -57,16 +56,10 @@ sfpca <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
 #'
 #' @return List with three named elements: left singular vector u, eigenval d,
 #'   and right singular vector v.
-#' @export
 sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
                         Omega_u = diag(nrow(X)), Omega_v = diag(ncol(X))) {
 
-  stopifnot(lambda_u >= 0)
-  stopifnot(lambda_v >= 0)
-  stopifnot(alpha_u >= 0)
-  stopifnot(alpha_v >= 0)
-  stopifnot(all(svd(Omega_u)$d >= 0))  # check if positive semi-definite
-  stopifnot(all(svd(Omega_v)$d >= 0))
+  # this function is an R reference implementation
 
   # some conventions so the following code matches the paper:
   #   - u: left singular vectors, or related to
@@ -79,6 +72,15 @@ sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
   n <- nrow(X)
   p <- ncol(X)
 
+  stopifnot(lambda_u >= 0)
+  stopifnot(lambda_v >= 0)
+  stopifnot(alpha_u >= 0)
+  stopifnot(alpha_v >= 0)
+  stopifnot(all(eigen(Omega_u)$values >= 0))  # check if positive semi-definite
+  stopifnot(all(eigen(Omega_v)$values >= 0))
+  stopifnot(dim(Omega_u) == c(n, n))   # check correct dimensions
+  stopifnot(dim(Omega_v) == c(p, p))
+
   # initialize u, v to rank one SVD solution
 
   tsvd <- irlba::irlba(X, 1, 1)
@@ -89,10 +91,10 @@ sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
   S_u <- diag(n) + alpha_u * Omega_u * n
   S_v <- diag(p) + alpha_v * Omega_v * p
 
-  L_u <- max_eigenval(S_u)
-  L_v <- max_eigenval(S_v)
+  L_u <- max(eigen(S_u)$values) + 0.01
+  L_v <- max(eigen(S_v)$values) + 0.01
 
-  tol <- 1e-6
+  tol <- 1e-9
   delta_u <- tol + 1
   delta_v <- tol + 1
 
@@ -102,8 +104,8 @@ sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
       old_u <- u
       u <- prox_l1(u + (X %*% v - S_u %*% u) / L_u, lambda_u / L_u)
       u_norm <- as.numeric(op_norm(u, S_u))
-      u <- if (u_norm > 0) u / u_norm else zeros_like(u)
-      delta_u <- l2_norm(u - old_u)
+      u <- if (u_norm > 0) u / u_norm else rep(0, n)
+      delta_u <- norm(u - old_u)
     }
 
     # same as u case except place with v, and add a single transposition
@@ -111,14 +113,14 @@ sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
       old_v <- v
       v <- prox_l1(v + (t(X) %*% u - S_v %*% v) / L_v, lambda_v / L_v)
       v_norm <- as.numeric(op_norm(v, S_v))
-      v <- if (v_norm > 0) v / v_norm else zeros_like(v)
-      delta_v <- l2_norm(v - old_v)
+      v <- if (v_norm > 0) v / v_norm else rep(0, p)
+      delta_v <- norm(v - old_v)
     }
   }
 
   # normalize eigenvectors and calculate eigenvalue
-  u <- if (l2_norm(u) > 0) u / l2_norm(u) else u
-  v <- if (l2_norm(v) > 0) v / l2_norm(v) else v
+  u <- if (norm(u) > 0) u / norm(u) else u
+  v <- if (norm(v) > 0) v / norm(v) else v
   d <- as.numeric(t(u) %*% X %*% v)
 
   list(u = u, d = d, v = v)

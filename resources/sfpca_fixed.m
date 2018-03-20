@@ -30,7 +30,6 @@
 %Xhat: the deflated residual matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 function[U,V,d,Xhat] = sfpca_fixed(x,lamu,lamv,alphau,alphav,Omegu,Omegv,startu,startv,posu,posv,maxit)
 [n,p] = size(x);
 Su = speye(n) + n*alphau*Omegu;
@@ -46,7 +45,7 @@ else
     v = startv;
 end
 indo = 1; iter = 0;
-while indo>thr & iter<maxit
+while indo>thr && iter<maxit
     oldu = u; oldv = v;
     indu = 1;
     while indu>thr
@@ -79,7 +78,4 @@ U = u/norm(u);
 V = v/norm(v);
 d = U'*Xhat*V;
 Xhat = Xhat - d*U*V';
-
-load fisheriris.mat
-sfpca_fixed(x = meas, lamu = 0,lamv = 0,alphau = 0,alphav = 0, %
-            Omegu = ,Omegv,startu,startv,posu,posv,maxit)
+end
