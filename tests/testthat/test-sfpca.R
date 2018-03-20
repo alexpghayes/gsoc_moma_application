@@ -2,13 +2,11 @@ context("test-sfpca.R")
 
 # the MATLAB test data is created by running resources/create_test_data.m
 
-
-
 expect_agrees_with_matlab <- function(testfile) {
 
   test <- R.matlab::readMat(testfile)
 
-  res <- sfpca_r(X = test$x,
+  res_r <- sfpca_r(X = test$x,
                  lambda_u = as.numeric(test$lamu),
                  lambda_v = as.numeric(test$lamv),
                  alpha_u = as.numeric(test$alphau),
@@ -16,9 +14,23 @@ expect_agrees_with_matlab <- function(testfile) {
                  Omega_u = test$Omegu,
                  Omega_v = test$Omegv)
 
-  expect_equal(test$U, res$u)
-  expect_equal(test$V, res$v)
-  expect_equal(as.numeric(test$d), res$d)
+  res_cpp <- sfpca(X = test$x,
+                   lambda_u = as.numeric(test$lamu),
+                   lambda_v = as.numeric(test$lamv),
+                   alpha_u = as.numeric(test$alphau),
+                   alpha_v = as.numeric(test$alphav),
+                   Omega_u = test$Omegu,
+                   Omega_v = test$Omegv)
+
+  # test R implementation
+  expect_equal(test$U, res_r$u, tolerance = 1e-5)
+  expect_equal(test$V, res_r$v, tolerance = 1e-5)
+  expect_equal(as.numeric(test$d), res_r$d, tolerance = 1e-5)
+
+  # test C++ implementation
+  expect_equal(test$U, res_cpp$u, tolerance = 1e-5)
+  expect_equal(test$V, res_cpp$v, tolerance = 1e-5)
+  expect_equal(as.numeric(test$d), res_cpp$d, tolerance = 1e-5)
 }
 
 

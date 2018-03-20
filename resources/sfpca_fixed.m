@@ -34,8 +34,8 @@ function[U,V,d,Xhat] = sfpca_fixed(x,lamu,lamv,alphau,alphav,Omegu,Omegv,startu,
 [n,p] = size(x);
 Su = speye(n) + n*alphau*Omegu;
 Sv = speye(p) + p*alphav*Omegv;
-Lu = max(eig(Su)) + .01;
-Lv = max(eig(Sv)) + .01;
+Lu = max(eig(Su)) + .01
+Lv = max(eig(Sv)) + .01
 thr = 1e-6;  
 Xhat = x; 
 if sum(startu)==0
@@ -71,6 +71,8 @@ while indo>thr && iter<maxit
         end            
         indv = norm(v - oldvi)/norm(oldvi);
     end
+    u
+    v
     indo = norm(oldu - u)/norm(oldu) + norm(oldv - v)/norm(oldv);
     iter = iter + 1
 end

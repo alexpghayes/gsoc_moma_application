@@ -25,7 +25,7 @@ posv = 0;
 maxit = 100;
 
 [U, V, d, ~] = sfpca_fixed(x, lamu, lamv, alphau, alphav, Omegu, ...
-    Omegv, startu, startv, posu, posv, maxit);
+    Omegv, startu, startv, posu, posv, maxit)
 
 save('../tests/testthat/test1.mat');
 clear;
@@ -38,8 +38,8 @@ x = meas;
 clear meas species;
 [n, p] = size(x);
 
-lamu = 1;
-lamv = 1;
+lamu = .5;
+lamv = .5;
 
 alphau = 2;
 alphav = 3;
@@ -54,7 +54,7 @@ posv = 0;
 maxit = 100;
 
 [U, V, d, ~] = sfpca_fixed(x, lamu, lamv, alphau, alphav, Omegu, ...
-    Omegv, startu, startv, posu, posv, maxit);
+    Omegv, startu, startv, posu, posv, maxit)
 
 save('../tests/testthat/test2.mat');
 clear;
@@ -67,11 +67,11 @@ x = meas;
 clear meas species;
 [n, p] = size(x);
 
-lamu = 1.7;
-lamv = 0.2;
+lamu = 23;
+lamv = 15;
 
-alphau = 2;
-alphav = 0;
+alphau = 0.01;
+alphav = 0.001;
 
 Omegu = rand(n, n);
 Omegu = 0.5 * (Omegu + Omegu') + n * eye(n);
@@ -86,7 +86,7 @@ posv = 0;
 maxit = 100;
 
 [U, V, d, ~] = sfpca_fixed(x, lamu, lamv, alphau, alphav, Omegu, ...
-    Omegv, startu, startv, posu, posv, maxit);
+    Omegv, startu, startv, posu, posv, maxit)
 
 save('../tests/testthat/test3.mat');
 clear;
