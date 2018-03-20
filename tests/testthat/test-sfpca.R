@@ -7,12 +7,12 @@ expect_agrees_with_matlab <- function(testfile) {
   test <- R.matlab::readMat(testfile)
 
   res_r <- sfpca_r(X = test$x,
-                 lambda_u = as.numeric(test$lamu),
-                 lambda_v = as.numeric(test$lamv),
-                 alpha_u = as.numeric(test$alphau),
-                 alpha_v = as.numeric(test$alphav),
-                 Omega_u = test$Omegu,
-                 Omega_v = test$Omegv)
+                   lambda_u = as.numeric(test$lamu),
+                   lambda_v = as.numeric(test$lamv),
+                   alpha_u = as.numeric(test$alphau),
+                   alpha_v = as.numeric(test$alphav),
+                   Omega_u = test$Omegu,
+                   Omega_v = test$Omegv)
 
   res_cpp <- sfpca(X = test$x,
                    lambda_u = as.numeric(test$lamu),

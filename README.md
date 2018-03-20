@@ -11,6 +11,11 @@ So far I have:
 -   Implemented the L1 penalized rank 1 SFPCA algorithm in C++ using Armadillo
 -   Wrapped the C++ implementation with `Rcpp`
 -   Tested both implementations with `testthat`
--   Passed `R CMD check` with no warnings or errors
+-   Passed `R CMD check` with no warnings or errors on Linux & Windows
 
 **This application is in progress and is not yet complete**
+
+TODO:
+
+-   How to get rid of the R CMD check NOTE on registering native routines
+-   C++ cleanup as per comments in `sfpca.cpp`

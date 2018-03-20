@@ -111,7 +111,7 @@ sfpca_r <- function(X, lambda_u = 0, lambda_v = 0, alpha_u = 0, alpha_v = 0,
       delta_u <- norm(u - tmp_u) / norm(tmp_u)
     }
 
-    # same as u case except place with v, and add a single transposition
+    # same as u case except add a single transposition
     while (delta_v > tol) {
       tmp_v <- v
       v <- prox_l1(v + (t(X) %*% u - S_v %*% v) / L_v, lambda_v / L_v)
