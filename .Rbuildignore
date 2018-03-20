@@ -4,3 +4,6 @@
 ^README\.Rmd$
 
 resources
+^\.travis\.yml$
+^codecov\.yml$
+^appveyor\.yml$

@@ -14,6 +14,10 @@ knitr::opts_chunk$set(
 
 ## GSOC Modern Multivariate Analysis 
 
+[![Travis build status](https://travis-ci.org/alexpghayes/gsoc_moma_application.svg?branch=master)](https://travis-ci.org/alexpghayes/gsoc_moma_application)
+[![Coverage status](https://codecov.io/gh/alexpghayes/gsoc_moma_application/branch/master/graph/badge.svg)](https://codecov.io/github/alexpghayes/gsoc_moma_application?branch=mas)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/alexpghayes/gsoc_moma_application?branch=master&svg=true)](https://ci.appveyor.com/project/alexpghayes/gsoc_moma_application)
+
 So far I have:
 
   - Implemented the L1 penalized rank 1 SFPCA algorithm in R
